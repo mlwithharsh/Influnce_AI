@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:16
+    container_name: influnce_ai_postgres
+    environment:
+      POSTGRES_USER: influnce
+      POSTGRES_PASSWORD: influnce_password
+      POSTGRES_DB: influnce_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./backend/db/init:/docker-entrypoint-initdb.d
+      - influnce_ai_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U influnce -d influnce_ai"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  influnce_ai_pgdata:
