@@ -1,4 +1,3 @@
-CREATE TABLE IF NOT EXISTS raw_instagram_posts (
   post_id TEXT PRIMARY KEY,
   raw_json JSONB NOT NULL
 );
