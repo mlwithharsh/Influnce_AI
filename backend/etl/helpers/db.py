@@ -1,6 +1,21 @@
 import psycopg2
 import json
 import os
+import pathlib
+
+def _load_env():
+    root_env = pathlib.Path(__file__).resolve().parents[3] / ".env"
+    backend_env = pathlib.Path(__file__).resolve().parents[2] / ".env"
+    for p in (root_env, backend_env):
+        if p.exists():
+            for line in p.read_text().splitlines():
+                s = line.strip()
+                if not s or s.startswith("#") or "=" not in s:
+                    continue
+                k, v = s.split("=", 1)
+                os.environ.setdefault(k.strip(), v.strip())
+
+_load_env()
 
 def conn():
     return psycopg2.connect(
