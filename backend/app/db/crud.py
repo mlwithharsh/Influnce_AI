@@ -57,3 +57,4 @@ def get_all_posts_with_analytics(db: Session, user_id: int):
         .filter(models.SocialAccount.user_id == user_id)
         .all()
     )
+

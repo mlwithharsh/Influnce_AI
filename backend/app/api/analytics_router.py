@@ -80,3 +80,26 @@ def analytics_overview(user_id: int, db: Session = Depends(get_db)):
             "posted_at": top_post.posted_at,
         }
     }
+
+@router.get("/timeseries")
+def engagement_timeseries(user_id: int, db: Session = Depends(get_db)):
+    """
+    Returns time-series data for charts
+    """
+    posts = crud.get_all_posts_with_analytics(db, user_id)
+
+    if not posts:
+        return {"message": "No analytics history available yet"}
+
+    timeseries = [
+        {
+            "posted_at": p.posted_at,
+            "views": p.views,
+            "likes": p.likes,
+            "comments": p.comments,
+            "engagement_score": (p.likes + p.comments) / max(p.views, 1)
+        }
+        for p in sorted(posts, key=lambda x: x.posted_at)
+    ]
+
+    return {"timeline": timeseries}
