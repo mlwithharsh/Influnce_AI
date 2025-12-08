@@ -36,31 +36,27 @@ class Post(Base):
     __tablename__ = "posts"
 
     id = Column(Integer, primary_key=True, index=True)
-    platform_post_id = Column(String, index=True)  # youtube videoId / instagram mediaId / tweetId
-    title = Column(String, nullable=True)
-    caption = Column(Text, nullable=True)
-    posted_at = Column(DateTime, nullable=True)
-
+    caption = Column(Text)
+    posted_at = Column(DateTime, default=datetime.utcnow)
     account_id = Column(Integer, ForeignKey("social_accounts.id"))
-    social_account = relationship("SocialAccount", back_populates="posts")
 
     analytics = relationship("PostAnalytics", back_populates="post")
+
 
 class PostAnalytics(Base):
     __tablename__ = "post_analytics"
 
     id = Column(Integer, primary_key=True, index=True)
     post_id = Column(Integer, ForeignKey("posts.id"))
-
     likes = Column(Integer, default=0)
     dislikes = Column(Integer, default=0)
     comments = Column(Integer, default=0)
     shares = Column(Integer, default=0)
     views = Column(Integer, default=0)
-
-    captured_at = Column(DateTime, default=datetime.utcnow)
+    predicted_best_time = Column(DateTime, nullable=True)
 
     post = relationship("Post", back_populates="analytics")
+
 
 class Trend(Base):
     __tablename__ = "trends"
