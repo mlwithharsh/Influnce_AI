@@ -9,3 +9,4 @@ pyjwt
 passlib[bcrypt]
 python-multipart
 httpx
+google-auth-oauthlib
