@@ -1,0 +1,9 @@
+model_name: best_time_xgb
+n_estimators: 300
+max_depth: 6
+learning_rate: 0.05
+test_size: 0.2
+random_state: 42
+feature_csv: ml/datasets/features/time_features.csv
+model_path: ml/models/best_time_xgb.joblib
+meta_path: ml/models/best_time_meta.json

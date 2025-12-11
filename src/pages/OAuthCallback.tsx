@@ -7,6 +7,7 @@ export default function OAuthCallback() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const { setToken, fetchConnectedAccounts } = useAuthStore();
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
     useEffect(() => {
         const handleCallback = async () => {
@@ -19,8 +20,15 @@ export default function OAuthCallback() {
             }
 
             try {
-                // The backend will handle the OAuth callback and return a JWT token
-                // This page is just for showing a loading state while the redirect happens
+                // Call backend OAuth callback to exchange code for tokens
+                const res = await fetch(`${API_URL}/auth/${platform}/callback?code=${encodeURIComponent(code)}`);
+                if (!res.ok) throw new Error('OAuth callback failed');
+
+                const data = await res.json();
+                if (data?.access_token) {
+                    setToken(data.access_token);
+                }
+
                 await fetchConnectedAccounts();
                 navigate('/dashboard?success=connected');
             } catch (error) {

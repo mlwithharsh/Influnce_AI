@@ -24,8 +24,13 @@ import os
 # Add your project root to PYTHONPATH
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# Import your Base model metadata
-from backend.app.db import Base
+# Import your Base model metadata (SQLAlchemy Base)
+from backend.app.core.database import Base
+
+# Configure database URL from environment if provided
+db_url = os.getenv("DATABASE_URL")
+if db_url:
+    config.set_main_option("sqlalchemy.url", db_url)
 
 target_metadata = Base.metadata
 
