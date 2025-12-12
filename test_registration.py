@@ -1,27 +1,37 @@
 import requests
-import json
+import sys
 
-# Test registration endpoint
-url = "http://localhost:8000/auth/register"
-data = {
-    "username": "testuser",
-    "email": "test@example.com",
-    "password": "password123"
-}
+API_URL = "http://127.0.0.1:8000"
 
-print("Testing registration endpoint...")
-print(f"URL: {url}")
-print(f"Data: {json.dumps(data, indent=2)}")
-print()
-
-try:
-    response = requests.post(url, json=data)
-    print(f"Status Code: {response.status_code}")
-    print(f"Response: {json.dumps(response.json(), indent=2)}")
+def test_register():
+    print(f"Testing registration against {API_URL}...")
     
-    if response.status_code == 200:
-        print("\n✅ Registration successful!")
-    else:
-        print(f"\n❌ Registration failed: {response.json()}")
-except Exception as e:
-    print(f"\n❌ Error: {e}")
+    # Randomize email to avoid "already exists" error
+    import random
+    suffix = random.randint(1000, 9999)
+    email = f"test_{suffix}@example.com"
+    
+    payload = {
+        "username": f"user_{suffix}",
+        "email": email,
+        "password": "password123"
+    }
+    
+    try:
+        response = requests.post(f"{API_URL}/auth/register", json=payload)
+        print(f"Status Code: {response.status_code}")
+        try:
+            print(f"Response: {response.json()}")
+        except:
+            print(f"Response Text: {response.text}")
+            
+        if response.status_code == 200:
+            print("✅ Registration Successful")
+        else:
+            print("❌ Registration Failed")
+            
+    except Exception as e:
+        print(f"❌ Connection Error: {e}")
+
+if __name__ == "__main__":
+    test_register()
