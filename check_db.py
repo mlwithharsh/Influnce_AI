@@ -23,10 +23,14 @@ with engine.connect() as conn:
         for row in result.fetchall():
             print(f"  - {row[0]}: {row[1]}")
         
-        # Check if there are any users
-        result = conn.execute(text("SELECT COUNT(*) FROM users"))
-        count = result.fetchone()[0]
-        print(f"\n👥 Total users in database: {count}")
+        # Check available users
+        result = conn.execute(text("SELECT email, username FROM users"))
+        users = result.fetchall()
+        print(f"\n👥 Total users in database: {len(users)}")
+        if users:
+            print("\n📧 Registered Emails:")
+            for user in users:
+                print(f"  - {user[0]} ({user[1]})")
     else:
         print("\n❌ Users table does not exist!")
         print("Run: python -m alembic upgrade head")

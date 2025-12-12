@@ -40,6 +40,7 @@ class Post(Base):
     posted_at = Column(DateTime, default=datetime.utcnow)
     account_id = Column(Integer, ForeignKey("social_accounts.id"))
 
+    social_account = relationship("SocialAccount", back_populates="posts")
     analytics = relationship("PostAnalytics", back_populates="post")
 
 
