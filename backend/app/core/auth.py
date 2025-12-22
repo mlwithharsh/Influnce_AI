@@ -121,13 +121,14 @@
 
 from datetime import datetime, timedelta
 from typing import Optional
-from jose import jwt
+import jwt
 from passlib.context import CryptContext
 import os
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-JWT_SECRET = os.getenv("JWT_SECRET_KEY")
+# Use JWT_SECRET to align with .env.example and health_check expectations
+JWT_SECRET = os.getenv("JWT_SECRET")
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION_HOURS = 24 * 7  # 7 days
 
@@ -158,5 +159,5 @@ def decode_access_token(token: str):
         return payload
     except jwt.ExpiredSignatureError:
         return None
-    except jwt.JWTError:
+    except jwt.InvalidTokenError:
         return None
